@@ -38,13 +38,14 @@ export default function Editorial() {
           </div>
         </Reveal>
         <Reveal delay={0.1} className="h-full">
-          <div className="card h-full !border-coral/30 !bg-gradient-to-br !from-coral/25 !to-grape-deep">
-            <div className="flex items-center gap-2">
+          <div className="card h-full overflow-hidden !border-coral/40">
+            <span className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-coral/25 blur-3xl" aria-hidden />
+            <div className="relative flex items-center gap-2">
               <Copy size={18} className="text-coral" aria-hidden />
               <Badge tone="coral">Observación editorial</Badge>
             </div>
-            <h3 className="mt-4 font-display text-[36px] font-light leading-none">Contenido <em className="text-peri">duplicado</em></h3>
-            <ul className="mt-5 space-y-3">
+            <h3 className="relative mt-4 font-display text-[36px] font-light leading-none">Contenido <em className="text-peri">duplicado</em></h3>
+            <ul className="relative mt-5 space-y-3">
               <li className="flex gap-3 rounded-xl border border-cream/10 bg-cream/[0.06] p-4">
                 <PlatformIcon platform="instagram" />
                 <div>
