@@ -75,10 +75,21 @@ export default function Hero() {
           </div>
         </motion.div>
         <motion.div
-          className="mx-auto aspect-square w-full max-w-[400px] md:max-w-[440px]"
+          className="relative mx-auto aspect-square w-full max-w-[400px] md:max-w-[460px]"
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 1 }}
         >
-          <ClinicalArt />
+          <div className="absolute inset-0 opacity-90"><ClinicalArt /></div>
+          <div className="absolute left-1/2 top-1/2 h-[64%] w-[64%] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-full border-[3px] border-sand/80 shadow-[0_20px_60px_rgba(0,0,0,.45)]">
+            <img src="/img/doctor-azul.jpg" alt="Dr. Javier Lamas, ortodoncista craneomandibular" className="h-full w-full object-cover object-[50%_18%]" width={412} height={625} fetchPriority="high" />
+          </div>
+          <div className="absolute -left-1 bottom-[14%] rounded-xl bg-white px-3 py-2 text-ink shadow-lg sm:left-0">
+            <p className="font-display text-[22px] font-semibold leading-none">{totals.ttSharePct}%</p>
+            <p className="text-[11.5px] text-muted">alcance en TikTok</p>
+          </div>
+          <div className="absolute -right-1 top-[12%] rounded-xl bg-sand px-3 py-2 text-ink shadow-lg sm:right-0">
+            <p className="font-display text-[22px] font-semibold leading-none">{totals.maxViews.toLocaleString('en-US')}</p>
+            <p className="text-[11.5px]">vistas · pieza máxima</p>
+          </div>
         </motion.div>
       </div>
       <div className="border-t border-white/10 bg-white/[0.03]">

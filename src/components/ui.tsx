@@ -1,6 +1,6 @@
+import { useEffect, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
-import { motion } from 'framer-motion'
-import CountUp from 'react-countup'
+import { animate, motion, useInView } from 'framer-motion'
 import { Music2 } from 'lucide-react'
 
 const Instagram = ({ size = 16 }: { size?: number; 'aria-hidden'?: boolean }) => (
@@ -70,17 +70,24 @@ export function PlatformIcon({ platform, size = 16 }: { platform: 'instagram' | 
 }
 
 export function Num({ value, decimals = 0, suffix = '', prefix = '' }: { value: number; decimals?: number; suffix?: string; prefix?: string }) {
+  const ref = useRef<HTMLSpanElement>(null)
+  const inView = useInView(ref, { once: true, margin: '-40px' })
+  const [v, setV] = useState(0)
+  useEffect(() => {
+    if (!inView) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setV(value)
+      return
+    }
+    const c = animate(0, value, { duration: 1.4, ease: 'easeOut', onUpdate: setV })
+    return () => c.stop()
+  }, [inView, value])
   return (
-    <CountUp
-      end={value}
-      decimals={decimals}
-      duration={1.4}
-      separator=","
-      suffix={suffix}
-      prefix={prefix}
-      enableScrollSpy
-      scrollSpyOnce
-    />
+    <span ref={ref}>
+      {prefix}
+      {v.toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals })}
+      {suffix}
+    </span>
   )
 }
 
@@ -115,7 +122,7 @@ export function MiniStat({ label, value, tone }: { label: string; value: string;
 
 export function InsightCard({ n, title, text, tone }: { n: string; title: string; text?: string; tone: string }) {
   return (
-    <div className="card flex gap-4">
+    <div className="card flex h-full gap-4">
       <span
         className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full font-display text-[16px] font-semibold text-ink"
         style={{ background: tone }}

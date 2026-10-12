@@ -6,7 +6,8 @@ const links = [
   ['Evolución', 'evolucion'],
   ['Instagram', 'instagram'],
   ['TikTok', 'tiktok'],
-  ['Sistema editorial', 'editorial'],
+  ['Contenido', 'contenido'],
+  ['Editorial', 'editorial'],
   ['Conclusiones', 'conclusiones'],
 ]
 
