@@ -84,6 +84,11 @@ export const editorial = {
   weeks: [1, 2, 3, 4, 5, 6, 7, 8, 9].map((n) => ({ n, registered: n <= 2 })),
 }
 
+export const links = {
+  instagram: 'https://www.instagram.com/_javierlamas/',
+  tiktok: 'https://www.tiktok.com/@_javierlamas',
+}
+
 export const sources = ['Instagram Insights', 'TikTok Studio', 'Portal de guiones']
 
 export const limitations = [
@@ -95,13 +100,13 @@ export const limitations = [
 
 
 export const colors = {
-  ig: '#7C93C9',
-  igSoft: '#B8C8E8',
-  tt: '#B08D5B',
-  ttSoft: '#C4A882',
-  mint: '#A8D5BA',
-  rose: '#F2A7A7',
-  ink: '#1A1A2E',
+  ig: '#C4D3F7',
+  igSoft: '#6F80B3',
+  tt: '#F47358',
+  ttSoft: '#9C4A44',
+  olive: '#B9AE6F',
+  cream: '#FFFAF5',
+  grape: '#470B24',
 }
 
 // Publicaciones en orden cronológico (Excel: hojas IG_Reels y TikTok_Videos)
