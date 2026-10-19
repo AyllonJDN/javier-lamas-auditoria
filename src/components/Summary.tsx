@@ -1,7 +1,7 @@
 import { Area, AreaChart, CartesianGrid, Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { Eye, Layers } from 'lucide-react'
 import { ChartCard, InsightCard, KpiCard, Lazy, PlatformIcon, Reveal, Section, SectionTitle, ax, grid, legend, tip } from './ui'
-import { colors, cumulative, derived, meta, totals } from '../data/auditData'
+import { colors, cumulative, derived, fmt, meta, stats, totals } from '../data/auditData'
 
 const share = [
   { name: 'TikTok', value: totals.viewsTt, fill: colors.tt },
@@ -11,19 +11,19 @@ const share = [
 export default function Summary() {
   return (
     <Section id="resumen" tone="dark" decor={{ name: 'mirror', className: '-right-10 top-24 rotate-[18deg] text-peri/25' }}>
-      <SectionTitle n="01" eyebrow="Resumen ejecutivo" title="TikTok concentra el *92%* de las vistas de las 36 piezas." />
+      <SectionTitle n="01" eyebrow="Resumen ejecutivo" title={`TikTok concentra el *${totals.ttSharePct}%* de las vistas de las ${meta.totalPieces} piezas.`} />
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Reveal><KpiCard value={meta.totalPieces} label="Publicaciones" note="18 en Instagram · 18 en TikTok" icon={<Layers size={18} className="text-coral" aria-hidden />} /></Reveal>
+        <Reveal><KpiCard value={meta.totalPieces} label="Publicaciones" note={`${meta.piecesPerPlatform} en Instagram · ${meta.piecesPerPlatform} en TikTok`} icon={<Layers size={18} className="text-coral" aria-hidden />} /></Reveal>
         <Reveal delay={0.06}><KpiCard value={totals.viewsIg} label="Vistas Instagram" accent={colors.ig} icon={<PlatformIcon platform="instagram" />} /></Reveal>
         <Reveal delay={0.12}><KpiCard value={totals.viewsTt} label="Vistas TikTok" icon={<PlatformIcon platform="tiktok" />} /></Reveal>
-        <Reveal delay={0.18}><KpiCard value={totals.ttSharePct} suffix="%" label="de las vistas vienen de TikTok" note="12,487 vistas en total" accent={colors.olive} icon={<Eye size={18} className="text-peri" aria-hidden />} /></Reveal>
+        <Reveal delay={0.18}><KpiCard value={totals.ttSharePct} suffix="%" label="de las vistas vienen de TikTok" note={`${fmt(totals.viewsAll)} vistas en total`} accent={colors.olive} icon={<Eye size={18} className="text-peri" aria-hidden />} /></Reveal>
       </div>
 
       <div className="mt-4 grid gap-4 lg:grid-cols-[2fr_3fr]">
         <Reveal className="h-full">
-          <ChartCard title="Reparto de vistas" subtitle="Instagram + TikTok · 12,487 vistas" className="h-full">
+          <ChartCard title="Reparto de vistas" subtitle={`Instagram + TikTok · ${fmt(totals.viewsAll)} vistas`} className="h-full">
             <Lazy className="relative h-[260px]">
-              <div className="h-full w-full" role="img" aria-label="Gráfico de dona: TikTok 11,446 vistas (92%), Instagram 1,041 vistas (8%).">
+              <div className="h-full w-full" role="img" aria-label={`Gráfico de dona: TikTok ${fmt(totals.viewsTt)} vistas (${totals.ttSharePct}%), Instagram ${fmt(totals.viewsIg)} vistas (${100 - totals.ttSharePct}%).`}>
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie data={share} dataKey="value" nameKey="name" innerRadius={74} outerRadius={106} paddingAngle={3} cornerRadius={6} stroke="none" animationDuration={1400}>
@@ -35,7 +35,7 @@ export default function Summary() {
                 </ResponsiveContainer>
               </div>
               <div className="pointer-events-none absolute inset-x-0 top-[96px] text-center">
-                <p className="font-display text-[44px] font-light leading-none">92%</p>
+                <p className="font-display text-[44px] font-light leading-none">{totals.ttSharePct}%</p>
                 <p className="text-[12px] text-cream/55">TikTok</p>
               </div>
             </Lazy>
@@ -45,7 +45,7 @@ export default function Summary() {
           </ChartCard>
         </Reveal>
         <Reveal delay={0.08} className="h-full">
-          <ChartCard title="Vistas acumuladas por fecha de publicación" subtitle="31 ago – 8 oct · se ve el salto del 7 de octubre" className="h-full">
+          <ChartCard title="Vistas acumuladas por fecha de publicación" subtitle="31 ago – 15 oct · se ve el salto del 7 de octubre" className="h-full">
             <Lazy className="h-[330px]">
               <div className="h-full w-full" role="img" aria-label="Gráfico de áreas de vistas acumuladas. TikTok sube de forma marcada el 7 de octubre; Instagram crece de forma lenta.">
                 <ResponsiveContainer width="100%" height="100%">
@@ -70,9 +70,9 @@ export default function Summary() {
       </div>
 
       <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-3">
-        <Reveal className="h-full"><InsightCard n="1" tone={colors.tt} title="TikTok concentra el alcance." text="11,446 de 12,487 vistas combinadas." /></Reveal>
-        <Reveal delay={0.06} className="h-full"><InsightCard n="2" tone={colors.ig} title="El pico depende de una sola pieza." text={`Sin ese video, el promedio de TikTok baja de 636 a ${derived.ttMeanNoViral} vistas.`} /></Reveal>
-        <Reveal delay={0.12} className="h-full"><InsightCard n="3" tone={colors.olive} title="Se publicó más de lo que se guionizó." text="28 de 36 piezas sin guion registrado en el portal." /></Reveal>
+        <Reveal className="h-full"><InsightCard n="1" tone={colors.tt} title="TikTok concentra el alcance." text={`${fmt(totals.viewsTt)} de ${fmt(totals.viewsAll)} vistas combinadas (${totals.ttShareExact}%).`} /></Reveal>
+        <Reveal delay={0.06} className="h-full"><InsightCard n="2" tone={colors.ig} title="El pico depende de una sola pieza." text={`Sin ese video, el promedio de TikTok baja de ${Math.round(stats.ttMean)} a ${derived.ttMeanNoViral} vistas.`} /></Reveal>
+        <Reveal delay={0.12} className="h-full"><InsightCard n="3" tone={colors.olive} title="Se publicó más de lo que se guionizó." text={`${derived.withoutScript} de ${meta.totalPieces} piezas sin guion registrado en el portal.`} /></Reveal>
       </div>
     </Section>
   )

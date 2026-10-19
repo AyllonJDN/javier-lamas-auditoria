@@ -1,13 +1,15 @@
 import { Bar, BarChart, CartesianGrid, LabelList, Legend, Line, LineChart, ReferenceDot, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { motion } from 'framer-motion'
 import { ChartCard, Lazy, MiniStat, PlatformIcon, Reveal, Section, SectionTitle, ax, grid, legend, tip } from './ui'
-import { colors, derived, publishedByWeek, stats, weekly } from '../data/auditData'
+import { colors, derived, fmt, publishedByWeek, stats, weekly, weeklyPeak } from '../data/auditData'
 import { useMedia } from './useMedia'
 
 function PeakLabel({ viewBox, narrow }: { viewBox?: { x: number; y: number }; narrow: boolean }) {
   if (!viewBox) return null
   const { x, y } = viewBox
-  const lines = narrow ? ['TikTok: 5,735', 'vistas, semana 41'] : ['TikTok alcanza 5,735', 'vistas en la semana 41.']
+  const wk = weeklyPeak.week.slice(1)
+  const v = fmt(weeklyPeak.views)
+  const lines = narrow ? [`TikTok: ${v}`, `vistas, semana ${wk}`] : [`TikTok alcanza ${v}`, `vistas en la semana ${wk}.`]
   const w = narrow ? 122 : 156
   return (
     <g>
@@ -43,19 +45,19 @@ export default function Evolution() {
       <SectionTitle tone="light" n="02" eyebrow="Evolución y estadística" title="Una sola semana de TikTok, la 41, explica el *salto* del alcance." />
       <div className="grid gap-4 lg:grid-cols-[3fr_2fr]">
         <Reveal className="h-full">
-          <ChartCard title="Vistas semanales por plataforma" subtitle="Semanas 36–41" className="h-full">
+          <ChartCard title="Vistas semanales por plataforma" subtitle="Semanas 36–42" className="h-full">
             <Lazy className="h-[400px] w-full">
-              <div className="h-full w-full" role="img" aria-label="Gráfico de líneas de vistas semanales de Instagram y TikTok, semanas 36 a 41. TikTok sube a 5,735 vistas en la semana 41.">
+              <div className="h-full w-full" role="img" aria-label={`Gráfico de líneas de vistas semanales de Instagram y TikTok, semanas 36 a 42. TikTok sube a ${fmt(weeklyPeak.views)} vistas en la semana ${weeklyPeak.week.slice(1)}.`}>
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={weekly} margin={{ top: 30, right: 16, left: -8, bottom: 0 }}>
                     <CartesianGrid {...grid} vertical={false} />
                     <XAxis dataKey="week" {...ax} />
-                    <YAxis {...ax} domain={[0, 6500]} tickFormatter={(v) => v.toLocaleString('en-US')} />
+                    <YAxis {...ax} domain={[0, weeklyPeak.domainMax]} tickFormatter={(v) => v.toLocaleString('en-US')} />
                     <Tooltip {...tip} />
                     <Legend {...legend} />
                     <Line name="Instagram" dataKey="instagram" stroke={colors.ig} strokeWidth={3} strokeDasharray="6 4" dot={{ r: 4, fill: colors.ig, strokeWidth: 0 }} animationDuration={1800} />
                     <Line name="TikTok" dataKey="tiktok" stroke={colors.tt} strokeWidth={3.5} dot={{ r: 4.5, fill: colors.tt, strokeWidth: 0 }} animationDuration={1800} />
-                    <ReferenceDot x="S41" y={5735} r={8} fill={colors.tt} stroke="#FFFAF5" strokeWidth={2.5} label={<PeakLabel narrow={narrow} />} />
+                    <ReferenceDot x={weeklyPeak.week} y={weeklyPeak.views} r={8} fill={colors.tt} stroke="#FFFAF5" strokeWidth={2.5} label={<PeakLabel narrow={narrow} />} />
                   </LineChart>
                 </ResponsiveContainer>
               </div>
@@ -75,9 +77,9 @@ export default function Evolution() {
 
       <div className="mt-4 grid gap-4 md:grid-cols-2">
         <Reveal className="h-full">
-          <ChartCard title="Publicaciones por semana" subtitle="Cadencia real de publicación, semanas ISO 36–41" className="h-full">
+          <ChartCard title="Publicaciones por semana" subtitle="Cadencia real de publicación, semanas ISO 36–42" className="h-full">
             <Lazy className="h-[240px]">
-              <div className="h-full w-full" role="img" aria-label="Barras apiladas de publicaciones por semana: S36 9, S37 8, S38 4, S39 6, S40 3, S41 6.">
+              <div className="h-full w-full" role="img" aria-label={`Barras apiladas de publicaciones por semana: ${publishedByWeek.map((r) => `${r.w} ${r.ig + r.tt}`).join(", ")}.`}>
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={publishedByWeek} margin={{ top: 18, right: 8, left: -22, bottom: 0 }}>
                     <CartesianGrid {...grid} vertical={false} />
@@ -117,7 +119,7 @@ export default function Evolution() {
                 </div>
               ))}
               <p className="rounded-xl border border-cream/10 bg-cream/[0.06] px-3.5 py-2.5 text-[13.5px] text-cream/75">
-                Sin el video del 7 de octubre, el promedio de TikTok pasa de <strong className="text-coral">636</strong> a <strong className="text-coral">{derived.ttMeanNoViral}</strong> vistas.
+                Sin el video del 7 de octubre, el promedio de TikTok pasa de <strong className="text-coral">{Math.round(stats.ttMean)}</strong> a <strong className="text-coral">{derived.ttMeanNoViral}</strong> vistas.
               </p>
             </div>
           </ChartCard>

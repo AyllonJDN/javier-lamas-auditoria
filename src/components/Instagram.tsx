@@ -2,12 +2,12 @@ import { Bar, BarChart, CartesianGrid, Cell, ComposedChart, LabelList, Legend, L
 import { motion } from 'framer-motion'
 import { ArrowUpRight } from 'lucide-react'
 import { ChartCard, Lazy, MiniStat, PlatformIcon, Reveal, Section, SectionTitle, ax, grid, legend, tip } from './ui'
-import { colors, igAccount, igEngagement, igInsights, igPosts, igTop, links, profile } from '../data/auditData'
+import { colors, igAccount, igEngagement, igInsights, igPosts, igStoriesPct, igTop, links, profile } from '../data/auditData'
 import { useMedia } from './useMedia'
 
 const typeData = [
-  { name: 'Reels', value: 86.8, fill: colors.ig },
-  { name: 'Historias', value: 13.2, fill: colors.tt },
+  { name: 'Reels', value: Math.round((100 - igStoriesPct) * 10) / 10, fill: colors.ig },
+  { name: 'Historias', value: igStoriesPct, fill: colors.tt },
 ]
 
 export default function Instagram() {
@@ -41,7 +41,7 @@ export default function Instagram() {
             <a href={links.instagram} target="_blank" rel="noopener noreferrer" className="relative mt-4 inline-flex items-center gap-1.5 text-[13.5px] font-semibold text-coral hover:underline">
               Ver el perfil <ArrowUpRight size={14} aria-hidden />
             </a>
-            <p className="relative mt-3 text-[12.5px] text-cream/45">Cuenta activa hace ~1 mes: la ventana de 90 días cubre prácticamente todo su historial.</p>
+            <p className="relative mt-3 text-[12.5px] text-cream/45">Cuenta activa desde septiembre: la ventana de 90 días cubre todo su historial.</p>
           </div>
         </Reveal>
 
@@ -70,7 +70,7 @@ export default function Instagram() {
         <Reveal className="h-full">
           <ChartCard title="Vistas por publicación, en orden cronológico" subtitle="Barras: vistas (brillante = 96 o más) · línea: % de vistas de seguidores" className="h-full">
             <Lazy className="h-[320px]">
-              <div className="h-full w-full" role="img" aria-label="Gráfico combinado de las 18 publicaciones de Instagram: vistas por pieza entre 28 y 116, y porcentaje de seguidores.">
+              <div className="h-full w-full" role="img" aria-label={`Gráfico combinado de las ${igPosts.length} publicaciones de Instagram: vistas por pieza entre ${Math.min(...igPosts.map((p) => p.views))} y ${Math.max(...igPosts.map((p) => p.views))}, y porcentaje de seguidores.`}>
                 <ResponsiveContainer width="100%" height="100%">
                   <ComposedChart data={igPosts} margin={{ top: 14, right: 4, left: -14, bottom: 0 }}>
                     <CartesianGrid {...grid} vertical={false} />
@@ -131,9 +131,9 @@ export default function Instagram() {
           </ChartCard>
         </Reveal>
         <Reveal delay={0.06} className="h-full">
-          <ChartCard title="Vistas por tipo de contenido" subtitle="Ventana de 30 y 90 días" className="h-full">
+          <ChartCard title="Vistas por tipo de contenido" subtitle="Ventana de 90 días" className="h-full">
             <Lazy className="relative h-[200px]">
-              <div className="h-full w-full" role="img" aria-label="Dona: Reels 86.8% de las visualizaciones, Historias 13.2%.">
+              <div className="h-full w-full" role="img" aria-label={`Dona: Reels ${typeData[0].value}% de las visualizaciones, Historias ${igStoriesPct}%.`}>
                 <ResponsiveContainer width="100%" height="100%">
                   <PieChart>
                     <Pie data={typeData} dataKey="value" nameKey="name" innerRadius={56} outerRadius={84} paddingAngle={3} cornerRadius={6} stroke="none" animationDuration={1400}>
@@ -144,15 +144,15 @@ export default function Instagram() {
                 </ResponsiveContainer>
               </div>
               <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
-                <p className="font-display text-[34px] font-light leading-none">86.8%</p>
+                <p className="font-display text-[34px] font-light leading-none">{typeData[0].value}%</p>
                 <p className="text-[12px] text-cream/55">Reels</p>
               </div>
             </Lazy>
-            <p className="mt-2 text-[13px] text-cream/55">Las Historias aportan 13.2% de las visualizaciones, pero no se auditan una a una: el archivo de exportación estaba vacío.</p>
+            <p className="mt-2 text-[13px] text-cream/55">Las Historias aportan {igStoriesPct}% de las visualizaciones, pero no se auditan una a una: el archivo de exportación estaba vacío.</p>
           </ChartCard>
         </Reveal>
         <Reveal delay={0.12} className="h-full">
-          <ChartCard title="Interacción acumulada" subtitle="18 publicaciones de Instagram" className="h-full">
+          <ChartCard title="Interacción acumulada" subtitle={`${igPosts.length} publicaciones de Instagram`} className="h-full">
             <div className="grid grid-cols-2 gap-3">
               <MiniStat label="Me gusta" value={String(igEngagement.likes)} />
               <MiniStat label="Comentarios" value={String(igEngagement.comments)} />

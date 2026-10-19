@@ -1,7 +1,7 @@
 import { ArrowUpRight, Music2 } from 'lucide-react'
 import { InstagramIcon, MethodItem, Monogram, Reveal, Section, SectionTitle } from './ui'
 import { Instrument, InstrumentRow } from './Instruments'
-import { limitations, links, meta, sources } from '../data/auditData'
+import { fmt, limitations, links, meta, sources, totals } from '../data/auditData'
 
 const columns = [
   { tag: 'Lo que funciona', text: 'TikTok muestra mayor capacidad de distribución.', color: '#B9AE6F' },
@@ -11,7 +11,7 @@ const columns = [
 
 const recs = [
   'Retomar la guionización formal.',
-  'Descomponer el formato del video de 4,883 vistas y probar variaciones.',
+  `Descomponer el formato del video de ${fmt(totals.maxViews)} vistas y probar variaciones.`,
   'Evitar duplicaciones sin una hipótesis editorial explícita.',
   'Medir Instagram por señales de audiencia y formato, no solo volumen.',
 ]

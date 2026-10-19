@@ -2,7 +2,11 @@ import { Bar, BarChart, CartesianGrid, Cell, LabelList, ReferenceLine, Responsiv
 import { motion } from 'framer-motion'
 import { Bookmark, Heart, MessageCircle, Play, Share2 } from 'lucide-react'
 import { Badge, ChartCard, InsightCard, Lazy, MiniStat, Num, PlatformIcon, Reveal, Section, SectionTitle, Tilt, ax, grid, tip } from './ui'
-import { colors, derived, fmt, platformCompare, sameTopic, ttPosts, ttTotals, ttViral } from '../data/auditData'
+import { colors, derived, fmt, igPosts, platformCompare, sameTopic, stats, ttPosts, ttTotals, ttViral } from '../data/auditData'
+
+const ttRest = ttPosts.filter((p) => p.views !== ttViral.views).map((p) => p.views)
+const restMin = Math.min(...ttRest)
+const restMax = Math.max(...ttRest)
 
 const miniCharts = [
   { key: 'views', title: 'Vistas', data: platformCompare.views },
@@ -18,9 +22,9 @@ const phoneStats = [
 ] as const
 
 const bars = [
-  { l: 'Este video', v: 4883, c: colors.tt },
-  { l: 'Mediana de TikTok', v: 395, c: colors.olive },
-  { l: 'Mejor pieza de Instagram', v: 116, c: colors.ig },
+  { l: 'Este video', v: ttViral.views, c: colors.tt },
+  { l: 'Mediana de TikTok', v: Math.round(stats.ttMedian), c: colors.olive },
+  { l: 'Mejor pieza de Instagram', v: Math.max(...igPosts.map((p) => p.views)), c: colors.ig },
 ]
 
 function PhoneMock() {
@@ -54,7 +58,7 @@ function PhoneMock() {
 export default function TikTok() {
   return (
     <Section id="tiktok" tone="light" decor={{ name: 'forceps', className: '-right-8 top-16 rotate-[24deg] text-grape/15' }}>
-      <SectionTitle tone="light" n="04" eyebrow="TikTok y comparativa" title="Un solo video concentra *4,883* vistas: 12 veces la mediana de TikTok." />
+      <SectionTitle tone="light" n="04" eyebrow="TikTok y comparativa" title={`Un solo video concentra *${fmt(ttViral.views)}* vistas: ${ttViral.multiple} veces la mediana de TikTok.`} />
 
       <div className="grid gap-4 lg:grid-cols-[1.35fr_0.65fr]">
         <Reveal className="h-full">
@@ -75,7 +79,7 @@ export default function TikTok() {
                   <div key={b.l}>
                     <div className="flex justify-between text-[13px]"><span className="text-cream/70">{b.l}</span><strong className="tabular-nums">{b.v.toLocaleString('en-US')}</strong></div>
                     <div className="mt-1 h-2.5 overflow-hidden rounded-full bg-cream/10">
-                      <motion.div className="h-full rounded-full" style={{ background: b.c }} initial={{ width: 0 }} whileInView={{ width: `${Math.max((b.v / 4883) * 100, 2.5)}%` }} viewport={{ once: true }} transition={{ duration: 1.3, delay: 0.2 + i * 0.15, ease: [0.2, 0.7, 0.2, 1] }} />
+                      <motion.div className="h-full rounded-full" style={{ background: b.c }} initial={{ width: 0 }} whileInView={{ width: `${Math.max((b.v / ttViral.views) * 100, 2.5)}%` }} viewport={{ once: true }} transition={{ duration: 1.3, delay: 0.2 + i * 0.15, ease: [0.2, 0.7, 0.2, 1] }} />
                     </div>
                   </div>
                 ))}
@@ -84,13 +88,14 @@ export default function TikTok() {
           </div>
         </Reveal>
         <Reveal delay={0.1} className="h-full">
-          <ChartCard title="Total TikTok" subtitle="18 publicaciones" right={<PlatformIcon platform="tiktok" />} className="h-full">
+          <ChartCard title="Total TikTok" subtitle={`${ttTotals.pieces} publicaciones`} right={<PlatformIcon platform="tiktok" />} className="h-full">
             <p className="font-display text-[68px] font-light leading-none"><Num value={ttTotals.views} /></p>
             <p className="mb-5 text-[13px] text-cream/55">vistas totales</p>
-            <div className="grid grid-cols-3 gap-2.5">
+            <div className="grid grid-cols-2 gap-2.5">
               <MiniStat label="Me gusta" value={fmt(ttTotals.likes)} />
               <MiniStat label="Coment." value={fmt(ttTotals.comments)} />
               <MiniStat label="Piezas" value={fmt(ttTotals.pieces)} />
+              <MiniStat label="Seguidores" value={fmt(ttTotals.followers)} />
             </div>
             <p className="mt-5 text-[13px] text-cream/50">Compartidos y guardados solo están disponibles para parte de los videos: se muestran “—” cuando no hay dato.</p>
           </ChartCard>
@@ -99,20 +104,20 @@ export default function TikTok() {
 
       <div className="mt-4 grid gap-4 lg:grid-cols-[3fr_2fr]">
         <Reveal className="h-full">
-          <ChartCard title="Las 18 publicaciones de TikTok, en orden cronológico" subtitle="Una pieza se aleja del resto; las demás se mueven entre 148 y 728 vistas" className="h-full">
+          <ChartCard title={`Las ${ttPosts.length} publicaciones de TikTok, en orden cronológico`} subtitle={`Una pieza se aleja del resto; las demás se mueven entre ${restMin} y ${restMax} vistas`} className="h-full">
             <Lazy className="h-[320px]">
-              <div className="h-full w-full" role="img" aria-label="Barras de vistas de los 18 videos de TikTok. El video 18, del 7 de octubre, alcanza 4,883 vistas; el resto está entre 148 y 728. La mediana es 395.">
+              <div className="h-full w-full" role="img" aria-label={`Barras de vistas de los ${ttPosts.length} videos de TikTok. El video del 7 de octubre alcanza ${fmt(ttViral.views)} vistas; el resto está entre ${restMin} y ${restMax}. La mediana es ${stats.ttMedian}.`}>
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={ttPosts} margin={{ top: 22, right: 12, left: -8, bottom: 0 }}>
                     <CartesianGrid {...grid} vertical={false} />
                     <XAxis dataKey="n" {...ax} tick={{ fontSize: 11.5, fill: '#CDBCC6' }} />
                     <YAxis {...ax} tickFormatter={(v) => (v as number).toLocaleString('en-US')} />
                     <Tooltip {...tip} labelFormatter={(_, p) => (p?.[0]?.payload ? `#${p[0].payload.n} · ${p[0].payload.d} · ${p[0].payload.t}` : '')} formatter={(v) => [(v as number).toLocaleString('en-US'), 'Vistas']} />
-                    <ReferenceLine y={395} stroke="#FFFAF5" strokeDasharray="5 4" strokeOpacity={0.7} label={{ value: 'Mediana 395', position: 'insideTopLeft', dy: -9, fontSize: 12, fill: '#FFFAF5' }} />
+                    <ReferenceLine y={stats.ttMedian} stroke="#FFFAF5" strokeDasharray="5 4" strokeOpacity={0.7} label={{ value: `Mediana ${stats.ttMedian}`, position: 'insideTopLeft', dy: -9, fontSize: 12, fill: '#FFFAF5' }} />
                     <Bar dataKey="views" radius={[5, 5, 0, 0]} animationDuration={1500}>
                       {ttPosts.map((p) => <Cell key={p.n} fill={p.views > 4000 ? colors.tt : colors.ttSoft} />)}
                       <LabelList dataKey="views" content={({ x, y, width, value }) => (Number(value) > 4000
-                        ? <text x={(x as number) + (width as number) / 2} y={(y as number) - 8} textAnchor="middle" fontSize={13} fontWeight={700} fill="#FFFAF5">4,883</text>
+                        ? <text x={(x as number) + (width as number) / 2} y={(y as number) - 8} textAnchor="middle" fontSize={13} fontWeight={700} fill="#FFFAF5">{fmt(ttViral.views)}</text>
                         : null)} />
                     </Bar>
                   </BarChart>
@@ -123,11 +128,11 @@ export default function TikTok() {
         </Reveal>
         <Reveal delay={0.1} className="h-full">
           <ChartCard title="Mismo tema, dos plataformas" subtitle="Cuántas veces más vistas tuvo TikTok que Instagram con la misma idea" className="h-full">
-            <Lazy className="h-[320px]">
-              <div className="h-full w-full" role="img" aria-label="Barras horizontales del múltiplo de vistas TikTok sobre Instagram por tema: universidad 122 veces, oído 19, clic 11.6, evolución 3.5 y 10.3, molestias 9, sonrisa 3.1.">
+            <Lazy className="h-[360px]">
+              <div className="h-full w-full" role="img" aria-label={`Barras horizontales del múltiplo de vistas TikTok sobre Instagram por tema: ${sameTopic.map((r) => `${r.tema} ${r.mult} veces`).join(", ")}.`}>
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={[...sameTopic].sort((a, b) => b.mult - a.mult)} layout="vertical" margin={{ top: 0, right: 48, left: 0, bottom: 0 }}>
-                    <XAxis type="number" hide domain={[0, 140]} />
+                    <XAxis type="number" hide domain={[0, Math.max(...sameTopic.map((r) => r.mult)) * 1.18]} />
                     <YAxis type="category" dataKey="tema" width={168} {...ax} tick={{ fontSize: 12, fill: '#FFFAF5' }} interval={0} />
                     <Tooltip {...tip} formatter={(_, __, item) => [`IG ${item.payload.ig} → TikTok ${item.payload.tt.toLocaleString('en-US')}`, 'Vistas']} />
                     <Bar dataKey="mult" fill={colors.tt} radius={[0, 8, 8, 0]} barSize={20} animationDuration={1400}>
@@ -142,8 +147,8 @@ export default function TikTok() {
       </div>
 
       <div className="mt-4 grid gap-4 md:grid-cols-3">
-        <Reveal className="h-full"><InsightCard n="1" tone={colors.tt} title="Mediana de TikTok: 395 vistas" text="Es el rendimiento típico de una pieza; el promedio de 636 está inflado por un solo video." /></Reveal>
-        <Reveal delay={0.06} className="h-full"><InsightCard n="2" tone={colors.ig} title={`Sin el viral: ${derived.ttMeanNoViral} vistas de promedio`} text="Aun así, es casi 7 veces el promedio de Instagram (58)." /></Reveal>
+        <Reveal className="h-full"><InsightCard n="1" tone={colors.tt} title={`Mediana de TikTok: ${stats.ttMedian} vistas`} text={`Es el rendimiento típico de una pieza; el promedio de ${Math.round(stats.ttMean)} está inflado por un solo video.`} /></Reveal>
+        <Reveal delay={0.06} className="h-full"><InsightCard n="2" tone={colors.ig} title={`Sin el viral: ${derived.ttMeanNoViral} vistas de promedio`} text={`Aun así, es ${derived.ttNoViralVsIg} veces el promedio de Instagram (${Math.round(stats.igMean)}).`} /></Reveal>
         <Reveal delay={0.12} className="h-full"><InsightCard n="3" tone={colors.olive} title="Me gusta por cada 100 vistas" text={`Instagram ${derived.likesPer100.instagram} · TikTok ${derived.likesPer100.tiktok}. El alcance de TikTok no se traduce en mayor interacción relativa.`} /></Reveal>
       </div>
 
