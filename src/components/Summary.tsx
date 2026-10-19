@@ -1,7 +1,10 @@
 import { Area, AreaChart, CartesianGrid, Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 import { Eye, Layers } from 'lucide-react'
 import { ChartCard, InsightCard, KpiCard, Lazy, PlatformIcon, Reveal, Section, SectionTitle, ax, grid, legend, tip } from './ui'
-import { colors, cumulative, derived, fmt, meta, stats, totals } from '../data/auditData'
+import { colors, cumulative, derived, fmt, meta, sameTopic, stats, totals } from '../data/auditData'
+
+const minMult = Math.round(Math.min(...sameTopic.map((r) => r.mult)))
+const maxMult = Math.round(Math.max(...sameTopic.map((r) => r.mult)))
 
 const share = [
   { name: 'TikTok', value: totals.viewsTt, fill: colors.tt },
@@ -72,7 +75,7 @@ export default function Summary() {
       <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-3">
         <Reveal className="h-full"><InsightCard n="1" tone={colors.tt} title="TikTok concentra el alcance." text={`${fmt(totals.viewsTt)} de ${fmt(totals.viewsAll)} vistas combinadas (${totals.ttShareExact}%).`} /></Reveal>
         <Reveal delay={0.06} className="h-full"><InsightCard n="2" tone={colors.ig} title="El pico depende de una sola pieza." text={`Sin ese video, el promedio de TikTok baja de ${Math.round(stats.ttMean)} a ${derived.ttMeanNoViral} vistas.`} /></Reveal>
-        <Reveal delay={0.12} className="h-full"><InsightCard n="3" tone={colors.olive} title="Se publicó más de lo que se guionizó." text={`${derived.withoutScript} de ${meta.totalPieces} piezas sin guion registrado en el portal.`} /></Reveal>
+        <Reveal delay={0.12} className="h-full"><InsightCard n="3" tone={colors.olive} title="El mismo tema rinde más en TikTok." text={`Los ${sameTopic.length} temas publicados en ambas plataformas tuvieron entre ${minMult}× y ${maxMult}× más vistas en TikTok.`} /></Reveal>
       </div>
     </Section>
   )

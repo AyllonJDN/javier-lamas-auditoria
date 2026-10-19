@@ -102,25 +102,26 @@ export const totals = {
   ttSharePct: Math.round((ttSum / allSum) * 100),
   ttShareExact: Math.round((ttSum / allSum) * 10000) / 100,
   maxViews: viral.views,
-  scripts: 8,
-  portalWeek: 10,
-  planWeeks: 13,
 }
 
+// Semanas de la cuenta: la actividad empieza el 31 ago (lunes de la semana ISO 36).
 const weekNums = [36, 37, 38, 39, 40, 41, 42]
-export const weekly = weekNums.map((w) => ({
-  week: `S${w}`,
-  label: `Semana ${w}`,
+const weekRange = ['31 ago–6 sep', '7–13 sep', '14–20 sep', '21–27 sep', '28 sep–4 oct', '5–11 oct', '12–18 oct (parcial)']
+export const weekly = weekNums.map((w, i) => ({
+  week: `Sem ${i + 1}`,
+  range: weekRange[i],
+  label: `Sem ${i + 1} · ${weekRange[i]}`,
   instagram: sum(igPosts.filter((p) => p.wk === w).map((p) => p.views)),
   tiktok: sum(ttPosts.filter((p) => p.wk === w).map((p) => p.views)),
 }))
-export const publishedByWeek = weekNums.map((w) => ({
-  w: `S${w}`,
+export const publishedByWeek = weekNums.map((w, i) => ({
+  w: `Sem ${i + 1}`,
+  label: `Sem ${i + 1} · ${weekRange[i]}`,
   ig: igPosts.filter((p) => p.wk === w).length,
   tt: ttPosts.filter((p) => p.wk === w).length,
 }))
 const peak = weekly.reduce((m, w) => (w.tiktok > m.tiktok ? w : m))
-export const weeklyPeak = { week: peak.week, views: peak.tiktok, domainMax: Math.ceil((peak.tiktok * 1.12) / 1000) * 1000 }
+export const weeklyPeak = { week: peak.week, range: peak.range, views: peak.tiktok, domainMax: Math.ceil((peak.tiktok * 1.12) / 1000) * 1000 }
 
 export const stats = {
   instagram: { mean: num(igMean), median: med(igMedian), sd: num(igSd), range: `${Math.min(...igViews)}–${Math.max(...igViews)}` },
@@ -157,7 +158,6 @@ export const igEngagement = {
   likes: igLikes,
   comments: sum(igPosts.map((p) => p.comments)),
   shares: sum(igPosts.map((p) => p.shares)),
-  followers: 22,
 }
 
 /* ---------- TikTok ---------- */
@@ -186,15 +186,6 @@ export const platformCompare = {
   likes: { instagram: igLikes, tiktok: ttLikes },
   comments: { instagram: igEngagement.comments, tiktok: ttTotals.comments },
 }
-
-/* ---------- Sistema editorial ---------- */
-const planWeeksShown = totals.portalWeek
-export const editorial = {
-  scripts: 8,
-  published: pieces,
-  weeks: Array.from({ length: planWeeksShown }, (_, i) => i + 1).map((n) => ({ n, registered: n <= 2 })),
-}
-export const scriptsByWeek = Array.from({ length: planWeeksShown }, (_, i) => ({ w: `S${i + 1}`, scripts: i < 2 ? 4 : 0 }))
 
 /* ---------- Cruces y derivados ---------- */
 // Evolución acumulada de vistas, por fecha de publicación
@@ -230,16 +221,12 @@ export const sameTopic = [
   return { tema: tema as string, ig, tt, mult: Math.round((tt / ig) * 10) / 10 }
 })
 
-const withoutScript = pieces - 8
 export const derived = {
   ttMeanNoViral: Math.round((ttSum - viral.views) / (ttPosts.length - 1)),
   ttNoViralVsIg: Math.round(((ttSum - viral.views) / (ttPosts.length - 1) / igMean) * 10) / 10,
   viralSharePct: Math.round((viral.views / allSum) * 100),
-  viralGrowthPct: 56,
   likesPer100: { instagram: Math.round((igLikes / igSum) * 1000) / 10, tiktok: Math.round((ttLikes / ttSum) * 1000) / 10 },
   cv: { instagram: Math.round((igSd / igMean) * 100), tiktok: Math.round((ttSd / ttMean) * 100) },
-  withoutScript,
-  withoutScriptPct: Math.round((withoutScript / pieces) * 100),
 }
 
 export const profile = {
@@ -248,7 +235,6 @@ export const profile = {
   tagline: 'Ayudo a odontólogos a comprender mejor casos complejos · Diagnóstico funcional · ATM · Ortodoncia',
   posts: igPosts.length,
   followers: 22,
-  following: 11,
 }
 
 export const colors = {
@@ -266,7 +252,7 @@ export const links = {
   tiktok: 'https://www.tiktok.com/@_javierlamas',
 }
 
-export const sources = ['Instagram Insights', 'TikTok Studio', 'Portal de guiones']
+export const sources = ['Instagram Insights', 'TikTok Studio']
 
 export const limitations = [
   'El archivo de Historias de Instagram no tiene detalle suficiente para un análisis individual.',

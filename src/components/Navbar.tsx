@@ -10,7 +10,6 @@ const links = [
   ['Instagram', 'instagram'],
   ['TikTok', 'tiktok'],
   ['Contenido', 'contenido'],
-  ['Editorial', 'editorial'],
   ['Conclusiones', 'conclusiones'],
 ]
 

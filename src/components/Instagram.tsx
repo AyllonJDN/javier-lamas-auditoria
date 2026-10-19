@@ -30,8 +30,8 @@ export default function Instagram() {
               </div>
             </div>
             <p className="relative mt-4 text-[13.5px] leading-snug text-cream/65">{profile.tagline}</p>
-            <div className="relative mt-4 grid grid-cols-3 gap-2 text-center">
-              {[[profile.posts, 'publicaciones'], [profile.followers, 'seguidores'], [profile.following, 'seguidos']].map(([n, l]) => (
+            <div className="relative mt-4 grid grid-cols-2 gap-2 text-center">
+              {[[profile.posts, 'publicaciones'], [profile.followers, 'seguidores']].map(([n, l]) => (
                 <div key={l as string} className="rounded-xl border border-cream/10 bg-cream/[0.06] py-2.5">
                   <p className="font-display text-[30px] font-light leading-none">{n}</p>
                   <p className="mt-1 text-[12px] text-cream/55">{l}</p>
@@ -153,11 +153,10 @@ export default function Instagram() {
         </Reveal>
         <Reveal delay={0.12} className="h-full">
           <ChartCard title="Interacción acumulada" subtitle={`${igPosts.length} publicaciones de Instagram`} className="h-full">
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-3 gap-3">
               <MiniStat label="Me gusta" value={String(igEngagement.likes)} />
               <MiniStat label="Comentarios" value={String(igEngagement.comments)} />
               <MiniStat label="Compartidos" value={String(igEngagement.shares)} />
-              <MiniStat label="Seguidores" value={String(igEngagement.followers)} />
             </div>
             <p className="mt-5 border-l-2 border-coral pl-4 font-display text-[22px] italic leading-snug">
               El alcance existe, pero la interacción continúa en una escala reducida.

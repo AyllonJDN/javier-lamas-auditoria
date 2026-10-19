@@ -4,13 +4,13 @@ import { Instrument, InstrumentRow } from './Instruments'
 import { fmt, limitations, links, meta, sources, totals } from '../data/auditData'
 
 const columns = [
-  { tag: 'Lo que funciona', text: 'TikTok muestra mayor capacidad de distribución.', color: '#B9AE6F' },
-  { tag: 'Lo que aún no es repetible', text: 'La viralidad está concentrada en una pieza.', color: '#F47358' },
-  { tag: 'Prioridad operativa', text: 'Recuperar trazabilidad entre guion, publicación y resultado.', color: '#C4D3F7' },
+  { tag: 'Lo que ya funciona', text: 'TikTok muestra mayor capacidad de distribución.', color: '#B9AE6F' },
+  { tag: 'Lo que viene', text: 'Repetir lo que funcionó en esa pieza para que el resultado no dependa de una sola.', color: '#F47358' },
+  { tag: 'Prioridad operativa', text: 'Cerrar la consistencia: mismo ritmo, mismo formato y registro de cada pieza.', color: '#C4D3F7' },
 ]
 
 const recs = [
-  'Retomar la guionización formal.',
+  'Sostener un guion y un registro formal por cada pieza.',
   `Descomponer el formato del video de ${fmt(totals.maxViews)} vistas y probar variaciones.`,
   'Evitar duplicaciones sin una hipótesis editorial explícita.',
   'Medir Instagram por señales de audiencia y formato, no solo volumen.',
@@ -20,7 +20,7 @@ export default function Conclusions() {
   return (
     <>
       <Section id="conclusiones" tone="grape" decor={{ name: 'mirror', className: '-right-8 top-16 -rotate-[20deg] text-peri/25' }}>
-        <SectionTitle n="07" eyebrow="Conclusiones" title="La distribución existe; falta convertirla en un *sistema* repetible." />
+        <SectionTitle n="06" eyebrow="Conclusiones" title="El sistema ya *arrancó:* la tarea más importante es cerrar la consistencia." />
         <div className="grid gap-4 md:grid-cols-3">
           {columns.map((c, i) => (
             <Reveal key={c.tag} delay={i * 0.08} className="h-full">

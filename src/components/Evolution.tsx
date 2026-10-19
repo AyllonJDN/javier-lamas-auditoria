@@ -7,9 +7,8 @@ import { useMedia } from './useMedia'
 function PeakLabel({ viewBox, narrow }: { viewBox?: { x: number; y: number }; narrow: boolean }) {
   if (!viewBox) return null
   const { x, y } = viewBox
-  const wk = weeklyPeak.week.slice(1)
   const v = fmt(weeklyPeak.views)
-  const lines = narrow ? [`TikTok: ${v}`, `vistas, semana ${wk}`] : [`TikTok alcanza ${v}`, `vistas en la semana ${wk}.`]
+  const lines = narrow ? [`TikTok: ${v}`, `vistas · ${weeklyPeak.range}`] : [`TikTok alcanza ${v}`, `vistas del ${weeklyPeak.range}.`]
   const w = narrow ? 122 : 156
   return (
     <g>
@@ -42,18 +41,18 @@ export default function Evolution() {
   const narrow = useMedia('(max-width: 640px)')
   return (
     <Section id="evolucion" tone="light" decor={{ name: 'caliper', className: '-left-8 top-20 -rotate-12 text-grape/15' }}>
-      <SectionTitle tone="light" n="02" eyebrow="Evolución y estadística" title="Una sola semana de TikTok, la 41, explica el *salto* del alcance." />
+      <SectionTitle tone="light" n="02" eyebrow="Evolución y estadística" title={`Una sola semana de TikTok, la del *${weeklyPeak.range.replace("–", " al ")},* explica el salto del alcance.`} />
       <div className="grid gap-4 lg:grid-cols-[3fr_2fr]">
         <Reveal className="h-full">
-          <ChartCard title="Vistas semanales por plataforma" subtitle="Semanas 36–42" className="h-full">
+          <ChartCard title="Vistas semanales por plataforma" subtitle="Semanas de actividad · 31 ago – 15 oct (la Sem 7 está incompleta)" className="h-full">
             <Lazy className="h-[400px] w-full">
-              <div className="h-full w-full" role="img" aria-label={`Gráfico de líneas de vistas semanales de Instagram y TikTok, semanas 36 a 42. TikTok sube a ${fmt(weeklyPeak.views)} vistas en la semana ${weeklyPeak.week.slice(1)}.`}>
+              <div className="h-full w-full" role="img" aria-label={`Gráfico de líneas de vistas semanales de Instagram y TikTok, semanas 1 a 7. TikTok sube a ${fmt(weeklyPeak.views)} vistas entre el ${weeklyPeak.range}.`}>
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={weekly} margin={{ top: 30, right: 16, left: -8, bottom: 0 }}>
                     <CartesianGrid {...grid} vertical={false} />
                     <XAxis dataKey="week" {...ax} />
                     <YAxis {...ax} domain={[0, weeklyPeak.domainMax]} tickFormatter={(v) => v.toLocaleString('en-US')} />
-                    <Tooltip {...tip} />
+                    <Tooltip {...tip} labelFormatter={(l) => weekly.find((w) => w.week === l)?.label ?? l} />
                     <Legend {...legend} />
                     <Line name="Instagram" dataKey="instagram" stroke={colors.ig} strokeWidth={3} strokeDasharray="6 4" dot={{ r: 4, fill: colors.ig, strokeWidth: 0 }} animationDuration={1800} />
                     <Line name="TikTok" dataKey="tiktok" stroke={colors.tt} strokeWidth={3.5} dot={{ r: 4.5, fill: colors.tt, strokeWidth: 0 }} animationDuration={1800} />
@@ -77,7 +76,7 @@ export default function Evolution() {
 
       <div className="mt-4 grid gap-4 md:grid-cols-2">
         <Reveal className="h-full">
-          <ChartCard title="Publicaciones por semana" subtitle="Cadencia real de publicación, semanas ISO 36–42" className="h-full">
+          <ChartCard title="Publicaciones por semana" subtitle="Cadencia real de publicación · 31 ago – 15 oct" className="h-full">
             <Lazy className="h-[240px]">
               <div className="h-full w-full" role="img" aria-label={`Barras apiladas de publicaciones por semana: ${publishedByWeek.map((r) => `${r.w} ${r.ig + r.tt}`).join(", ")}.`}>
                 <ResponsiveContainer width="100%" height="100%">
@@ -85,7 +84,7 @@ export default function Evolution() {
                     <CartesianGrid {...grid} vertical={false} />
                     <XAxis dataKey="w" {...ax} />
                     <YAxis {...ax} allowDecimals={false} />
-                    <Tooltip {...tip} />
+                    <Tooltip {...tip} labelFormatter={(l) => publishedByWeek.find((w) => w.w === l)?.label ?? l} />
                     <Legend {...legend} iconType="square" />
                     <Bar name="Instagram" dataKey="ig" stackId="a" fill={colors.ig} barSize={36} animationDuration={1200} />
                     <Bar name="TikTok" dataKey="tt" stackId="a" fill={colors.tt} radius={[7, 7, 0, 0]} barSize={36} animationDuration={1200}>

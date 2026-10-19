@@ -4,13 +4,13 @@ import { motion, useMotionTemplate, useMotionValue, useScroll, useSpring, useTra
 import { ArrowUpRight, Music2 } from 'lucide-react'
 import { Badge, InstagramIcon, Marquee, Monogram, Num, WordReveal } from './ui'
 import { Instrument } from './Instruments'
-import { links, meta, totals } from '../data/auditData'
+import { links, meta, totals, ttViral } from '../data/auditData'
 
 const miniStats = [
   { n: totals.viewsAll, label: 'vistas totales', suffix: '' },
   { n: totals.ttSharePct, label: 'del alcance viene de TikTok', suffix: '%' },
   { n: totals.maxViews, label: 'vistas en la pieza máxima', suffix: '' },
-  { n: totals.scripts, label: 'guiones registrados', suffix: '' },
+  { n: ttViral.multiple, label: 'veces la mediana de TikTok, pieza máxima', suffix: '×' },
 ]
 
 const ticker = ['Ortodoncia craneomandibular', 'Diagnóstico funcional', 'ATM', 'Ortodoncia', 'Instagram', 'TikTok', 'Auditoría cuantitativa']
