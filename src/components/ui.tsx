@@ -142,7 +142,7 @@ export function Section({
   )
 }
 
-export function SectionTitle({ n, eyebrow, title, tone = 'dark' }: { n: string; eyebrow: string; title: string; tone?: Tone }) {
+export function SectionTitle({ n, eyebrow, title, tone = 'dark' }: { n: string; eyebrow: string; title?: string; tone?: Tone }) {
   const light = tone === 'light'
   return (
     <div className="mb-10 max-w-4xl md:mb-14">
@@ -151,9 +151,11 @@ export function SectionTitle({ n, eyebrow, title, tone = 'dark' }: { n: string; 
         <motion.span className={`h-px origin-left ${light ? 'bg-grape/30' : 'bg-cream/30'}`} initial={{ width: 0 }} whileInView={{ width: 56 }} viewport={{ once: true }} transition={{ duration: 0.9 }} />
         <span className={`font-sans text-[12px] font-semibold uppercase tracking-[0.22em] ${light ? 'text-grape/70' : 'text-cream/60'}`}>{eyebrow}</span>
       </div>
-      <h2 className="mt-5 font-display text-[38px] font-light leading-[1.02] md:text-[60px]">
-        <WordReveal text={title} italic={light ? 'italic text-coral' : 'italic text-peri'} />
-      </h2>
+      {title && (
+        <h2 className="mt-5 font-display text-[38px] font-light leading-[1.02] md:text-[60px]">
+          <WordReveal text={title} italic={light ? 'italic text-coral' : 'italic text-peri'} />
+        </h2>
+      )}
     </div>
   )
 }

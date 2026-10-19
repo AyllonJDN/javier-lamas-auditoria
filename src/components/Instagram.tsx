@@ -14,7 +14,7 @@ export default function Instagram() {
   const narrow = useMedia('(max-width: 640px)')
   return (
     <Section id="instagram" tone="grape" decor={{ name: 'probe', className: '-left-6 bottom-10 rotate-[20deg] text-peri/25' }}>
-      <SectionTitle n="03" eyebrow="Instagram" title="Alcanza audiencia *fuera* de la cuenta, pero con interacción mínima." />
+      <SectionTitle n="03" eyebrow="Instagram" />
 
       <div className="grid gap-4 lg:grid-cols-[2fr_3fr]">
         <Reveal className="h-full">

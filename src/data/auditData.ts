@@ -254,12 +254,5 @@ export const links = {
 
 export const sources = ['Instagram Insights', 'TikTok Studio']
 
-export const limitations = [
-  'El archivo de Historias de Instagram no tiene detalle suficiente para un análisis individual.',
-  'Compartidos y guardados de TikTok solo están disponibles para parte de los videos.',
-  'Cuando un dato no existe se muestra “—”; nunca se sustituye por cero.',
-  'No hubo inversión publicitaria: no se reportan métricas de pauta.',
-]
-
 export const fmt = (n: number | null | undefined) =>
   n === null || n === undefined ? '—' : n.toLocaleString('en-US')

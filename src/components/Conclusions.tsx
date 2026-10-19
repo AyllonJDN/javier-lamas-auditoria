@@ -1,7 +1,7 @@
 import { ArrowUpRight, Music2 } from 'lucide-react'
 import { InstagramIcon, MethodItem, Monogram, Reveal, Section, SectionTitle } from './ui'
 import { Instrument, InstrumentRow } from './Instruments'
-import { fmt, limitations, links, meta, sources, totals } from '../data/auditData'
+import { fmt, links, meta, sources, totals } from '../data/auditData'
 
 const columns = [
   { tag: 'Lo que ya funciona', text: 'TikTok muestra mayor capacidad de distribución.', color: '#B9AE6F' },
@@ -60,9 +60,8 @@ export default function Conclusions() {
           </div>
           <div className="mt-12 border-t border-cream/10 pt-8">
             <p className="font-sans text-[12px] font-semibold uppercase tracking-[0.2em] text-coral">Metodología</p>
-            <div className="mt-5 grid gap-8 md:grid-cols-[1fr_2fr]">
+            <div className="mt-5">
               <MethodItem title="Fuentes" items={sources} />
-              <MethodItem title="Limitaciones" items={limitations} />
             </div>
           </div>
           <div className="mt-10 flex flex-wrap items-center justify-between gap-2 border-t border-cream/10 pt-5 text-[13px] text-cream/50">
