@@ -104,21 +104,25 @@ export const totals = {
   maxViews: viral.views,
 }
 
-// Semanas de la cuenta: la actividad empieza el 31 ago (lunes de la semana ISO 36).
-const weekNums = [36, 37, 38, 39, 40, 41, 42]
-const weekRange = ['31 ago–6 sep', '7–13 sep', '14–20 sep', '21–27 sep', '28 sep–4 oct', '5–11 oct', '12–18 oct (parcial)']
-export const weekly = weekNums.map((w, i) => ({
-  week: `Sem ${i + 1}`,
-  range: weekRange[i],
-  label: `Sem ${i + 1} · ${weekRange[i]}`,
-  instagram: sum(igPosts.filter((p) => p.wk === w).map((p) => p.views)),
-  tiktok: sum(ttPosts.filter((p) => p.wk === w).map((p) => p.views)),
+// Quincenas desde el inicio de la actividad (31 ago). wk = semanas ISO que cubre cada una.
+const periods = [
+  { name: 'Quinc. 1', range: '31 ago–13 sep', wks: [36, 37] },
+  { name: 'Quinc. 2', range: '14–27 sep', wks: [38, 39] },
+  { name: 'Quinc. 3', range: '28 sep–11 oct', wks: [40, 41] },
+  { name: 'Quinc. 4', range: '12–15 oct (parcial)', wks: [42] },
+]
+export const weekly = periods.map((q) => ({
+  week: q.name,
+  range: q.range,
+  label: `${q.name} · ${q.range}`,
+  instagram: sum(igPosts.filter((p) => q.wks.includes(p.wk)).map((p) => p.views)),
+  tiktok: sum(ttPosts.filter((p) => q.wks.includes(p.wk)).map((p) => p.views)),
 }))
-export const publishedByWeek = weekNums.map((w, i) => ({
-  w: `Sem ${i + 1}`,
-  label: `Sem ${i + 1} · ${weekRange[i]}`,
-  ig: igPosts.filter((p) => p.wk === w).length,
-  tt: ttPosts.filter((p) => p.wk === w).length,
+export const publishedByWeek = periods.map((q) => ({
+  w: q.name,
+  label: `${q.name} · ${q.range}`,
+  ig: igPosts.filter((p) => q.wks.includes(p.wk)).length,
+  tt: ttPosts.filter((p) => q.wks.includes(p.wk)).length,
 }))
 const peak = weekly.reduce((m, w) => (w.tiktok > m.tiktok ? w : m))
 export const weeklyPeak = { week: peak.week, range: peak.range, views: peak.tiktok, domainMax: Math.ceil((peak.tiktok * 1.12) / 1000) * 1000 }

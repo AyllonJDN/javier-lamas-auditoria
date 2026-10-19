@@ -41,12 +41,12 @@ export default function Evolution() {
   const narrow = useMedia('(max-width: 640px)')
   return (
     <Section id="evolucion" tone="light" decor={{ name: 'caliper', className: '-left-8 top-20 -rotate-12 text-grape/15' }}>
-      <SectionTitle tone="light" n="02" eyebrow="Evolución y estadística" title={`Una sola semana de TikTok, la del *${weeklyPeak.range.replace("–", " al ")},* explica el salto del alcance.`} />
+      <SectionTitle tone="light" n="02" eyebrow="Evolución y estadística" title={`Una sola quincena de TikTok, la del *${weeklyPeak.range.replace("–", " al ")},* explica el salto del alcance.`} />
       <div className="grid gap-4 lg:grid-cols-[3fr_2fr]">
         <Reveal className="h-full">
-          <ChartCard title="Vistas semanales por plataforma" subtitle="Semanas de actividad · 31 ago – 15 oct (la Sem 7 está incompleta)" className="h-full">
+          <ChartCard title="Vistas por quincena y plataforma" subtitle="31 ago – 15 oct · la última quincena está incompleta" className="h-full">
             <Lazy className="h-[400px] w-full">
-              <div className="h-full w-full" role="img" aria-label={`Gráfico de líneas de vistas semanales de Instagram y TikTok, semanas 1 a 7. TikTok sube a ${fmt(weeklyPeak.views)} vistas entre el ${weeklyPeak.range}.`}>
+              <div className="h-full w-full" role="img" aria-label={`Gráfico de líneas de vistas por quincena de Instagram y TikTok, quincenas 1 a 4. TikTok sube a ${fmt(weeklyPeak.views)} vistas entre el ${weeklyPeak.range}.`}>
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={weekly} margin={{ top: 30, right: 16, left: -8, bottom: 0 }}>
                     <CartesianGrid {...grid} vertical={false} />
@@ -76,9 +76,9 @@ export default function Evolution() {
 
       <div className="mt-4 grid gap-4 md:grid-cols-2">
         <Reveal className="h-full">
-          <ChartCard title="Publicaciones por semana" subtitle="Cadencia real de publicación · 31 ago – 15 oct" className="h-full">
+          <ChartCard title="Publicaciones por quincena" subtitle="Cadencia real de publicación · 31 ago – 15 oct" className="h-full">
             <Lazy className="h-[240px]">
-              <div className="h-full w-full" role="img" aria-label={`Barras apiladas de publicaciones por semana: ${publishedByWeek.map((r) => `${r.w} ${r.ig + r.tt}`).join(", ")}.`}>
+              <div className="h-full w-full" role="img" aria-label={`Barras apiladas de publicaciones por quincena: ${publishedByWeek.map((r) => `${r.w} ${r.ig + r.tt}`).join(", ")}.`}>
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={publishedByWeek} margin={{ top: 18, right: 8, left: -22, bottom: 0 }}>
                     <CartesianGrid {...grid} vertical={false} />
